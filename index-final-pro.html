@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🚀 Speed Test Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0b0e14;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .card {
+            background: #141a24;
+            padding: 30px 35px 35px;
+            border-radius: 35px;
+            max-width: 620px;
+            width: 100%;
+            border: 1px solid #2a313e;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            transition: 0.3s;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .vpn-badge {
+            background: #1f8b4c;
+            padding: 4px 16px;
+            border-radius: 60px;
+            font-weight: bold;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .fast-logo {
+            background: #212a36;
+            padding: 4px 18px;
+            border-radius: 60px;
+            font-size: 13px;
+            border: 1px solid #33415a;
+            color: #b3c2d1;
+            font-weight: 700;
+        }
+
+        /* ===== MAIN SPEED ===== */
+        .speed-main {
+            font-size: 80px;
+            font-weight: 700;
+            margin: 5px 0 2px;
+            transition: all 0.2s;
+            letter-spacing: -2px;
+        }
+
+        .speed-main span {
+            font-size: 28px;
+            color: #9aaec9;
+            font-weight: 500;
+        }
+
+        .speed-label {
+            color: #8b9bb5;
+            font-size: 15px;
+            letter-spacing: 0.3px;
+        }
+
+        .status {
+            font-size: 13px;
+            margin: 5px 0 10px;
+            font-weight: 500;
+        }
+
+        .status.ready { color: #8bc34a; }
+        .status.testing { color: #ffb347; }
+        .status.done { color: #4a9eff; }
+
+        /* ===== PROGRESS BAR ===== */
+        .progress-bar {
+            width: 100%;
+            height: 5px;
+            background: #29323f;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 8px 0 12px;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #4a9eff, #1f8b4c, #ffb347);
+            border-radius: 10px;
+            transition: width 0.15s;
+        }
+
+        /* ===== DOWNLOAD + UPLOAD ROW ===== */
+        .speed-row {
+            display: flex;
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .speed-box {
+            flex: 1;
+            background: #10171f;
+            padding: 10px 8px;
+            border-radius: 14px;
+            border: 1px solid #29323f;
+            text-align: center;
+        }
+
+        .speed-box .number {
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .speed-box .number span {
+            font-size: 13px;
+            color: #9aaec9;
+        }
+
+        .speed-box .label {
+            font-size: 10px;
+            color: #8b9bb5;
+            margin-top: 3px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .speed-box.download .number { color: #4a9eff; }
+        .speed-box.upload .number { color: #ff6b6b; }
+
+        /* ===== BUTTONS ===== */
+        .btn-test {
+            background: #1f8b4c;
+            border: none;
+            color: white;
+            font-size: 17px;
+            padding: 13px 40px;
+            border-radius: 60px;
+            cursor: pointer;
+            font-weight: 700;
+            margin-top: 8px;
+            transition: 0.2s;
+            width: 100%;
+        }
+
+        .btn-test:hover { background: #23a35a; transform: scale(1.01); }
+        .btn-test:active { transform: scale(0.97); }
+        .btn-test:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .btn-details {
+            background: transparent;
+            border: 1px solid #2f3c4e;
+            color: #b0c7df;
+            padding: 6px 18px;
+            border-radius: 60px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 10px;
+            transition: 0.2s;
+            width: 100%;
+        }
+
+        .btn-details:hover { background: #1f2937; }
+
+        /* ===== INFO PANEL ===== */
+        .info-panel {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #29323f;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 12px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #10171f;
+            padding: 5px 12px;
+            border-radius: 10px;
+            border: 1px solid #1f2937;
+        }
+
+        .info-item .info-label {
+            color: #6f839e;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-item .info-value {
+            color: #d6e4f5;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .info-item .info-value.green { color: #8bc34a; }
+        .info-item .info-value.blue { color: #4a9eff; }
+        .info-item .info-value.red { color: #ff6b6b; }
+        .info-item .info-value.gold { color: #ffb347; }
+        .info-item .info-value.purple { color: #b388ff; }
+
+        /* ===== BEST SPEEDS SECTION ===== */
+        .best-section {
+            margin-top: 10px;
+            padding: 12px 14px;
+            background: #0f1620;
+            border-radius: 14px;
+            border: 1px solid #1f8b4c33;
+        }
+
+        .best-title {
+            color: #8b9bb5;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .best-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .best-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+        }
+
+        .best-item .best-label {
+            color: #6f839e;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .best-item .best-value {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .best-item .best-value.download-best { color: #4a9eff; }
+        .best-item .best-value.upload-best { color: #ff6b6b; }
+        .best-item .best-value.peak-best { color: #ffb347; }
+
+        /* ===== EXTRA DETAILS (HIDDEN) ===== */
+        .details-panel {
+            display: none;
+            margin-top: 12px;
+            background: #10171f;
+            padding: 12px 16px;
+            border-radius: 14px;
+            border: 1px solid #29323f;
+        }
+
+        .details-panel .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid #1f2937;
+        }
+
+        .details-panel .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .details-panel .detail-label {
+            color: #6f839e;
+            font-size: 12px;
+        }
+
+        .details-panel .detail-value {
+            color: #d6e4f5;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 550px) {
+            .card { padding: 20px; }
+            .speed-main { font-size: 58px; }
+            .speed-main span { font-size: 20px; }
+            .info-grid { grid-template-columns: 1fr; }
+            .best-row { flex-direction: column; gap: 4px; }
+            .best-item { justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <!-- ===== HEADER ===== -->
+        <div class="header">
+            <div class="vpn-badge">🔒 VPN</div>
+            <div class="fast-logo">⚡ fast.com</div>
+        </div>
+
+        <!-- ===== SPEED ===== -->
+        <div class="speed-main" id="mainSpeed">0<span>Mbps</span></div>
+        <div class="speed-label">Your Internet speed is</div>
+        <div class="status ready" id="statusLabel">● ready</div>
+
+        <!-- ===== PROGRESS ===== -->
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <!-- ===== DOWNLOAD + UPLOAD ===== -->
+        <div class="speed-row">
+            <div class="speed-box download">
+                <div class="number" id="downloadSpeed">0<span>Mbps</span></div>
+                <div class="label">▼ Download</div>
+            </div>
+            <div class="speed-box upload">
+                <div class="number" id="uploadSpeed">0<span>Mbps</span></div>
+                <div class="label">▲ Upload</div>
+            </div>
+        </div>
+
+        <!-- ===== BUTTONS ===== -->
+        <button class="btn-test" id="testBtn">▶ Test Now</button>
+        <button class="btn-details" id="toggleDetails">📋 Show extra info ▾</button>
+
+        <!-- ===== INFO PANEL ===== -->
+        <div class="info-panel">
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">📡 IP</span>
+                    <span class="info-value" id="ipAddress">--</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">🌐 Server</span>
+                    <span class="info-value" id="serverInfo">--</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">📶 Latency</span>
+                    <span class="info-value gold" id="latencyInfo">-- ms</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">📦 Data</span>
+                    <span class="info-value purple" id="dataInfo">-- MB</span>
+                </div>
+            </div>
+
+            <!-- ===== BEST SPEEDS ===== -->
+            <div class="best-section">
+                <div class="best-title">🏆 Best Speeds (This Session)</div>
+                <div class="best-row">
+                    <div class="best-item">
+                        <span class="best-label">⬇ Download</span>
+                        <span class="best-value download-best" id="bestDownload">0 Mbps</span>
+                    </div>
+                    <div class="best-item">
+                        <span class="best-label">⬆ Upload</span>
+                        <span class="best-value upload-best" id="bestUpload">0 Mbps</span>
+                    </div>
+                    <div class="best-item">
+                        <span class="best-label">⚡ Peak</span>
+                        <span class="best-value peak-best" id="bestPeak">0 Mbps</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== EXTRA DETAILS (HIDDEN) ===== -->
+        <div class="details-panel" id="extraDetails">
+            <div class="detail-row">
+                <span class="detail-label">ISP</span>
+                <span class="detail-value" id="ispInfo">--</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Country</span>
+                <span class="detail-value" id="countryInfo">--</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Test ID</span>
+                <span class="detail-value" id="testIdInfo">--</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Time</span>
+                <span class="detail-value" id="timeInfo">--</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Connection</span>
+                <span class="detail-value" id="connectionInfo">--</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        // 🚀 ALL ELEMENTS
+        // ================================================================
+        const mainSpeed = document.getElementById('mainSpeed');
+        const downloadSpeed = document.getElementById('downloadSpeed');
+        const uploadSpeed = document.getElementById('uploadSpeed');
+        const progressFill = document.getElementById('progressFill');
+        const statusLabel = document.getElementById('statusLabel');
+        const testBtn = document.getElementById('testBtn');
+        const toggleDetails = document.getElementById('toggleDetails');
+        const extraDetails = document.getElementById('extraDetails');
+
+        // Info elements
+        const ipAddress = document.getElementById('ipAddress');
+        const serverInfo = document.getElementById('serverInfo');
+        const latencyInfo = document.getElementById('latencyInfo');
+        const dataInfo = document.getElementById('dataInfo');
+        const bestDownload = document.getElementById('bestDownload');
+        const bestUpload = document.getElementById('bestUpload');
+        const bestPeak = document.getElementById('bestPeak');
+        const ispInfo = document.getElementById('ispInfo');
+        const countryInfo = document.getElementById('countryInfo');
+        const testIdInfo = document.getElementById('testIdInfo');
+        const timeInfo = document.getElementById('timeInfo');
+        const connectionInfo = document.getElementById('connectionInfo');
+
+        // ================================================================
+        // 🧠 STATE
+        // ================================================================
+        let isTesting = false;
+        let bestDownloadSpeed = 0;
+        let bestUploadSpeed = 0;
+        let bestPeakSpeed = 0;
+        let testCount = 0;
+
+        // ================================================================
+        // 🔧 HELPERS
+        // ================================================================
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function generateIP() {
+            return `${randomInt(1, 255)}.${randomInt(0, 255)}.${randomInt(0, 255)}.${randomInt(1, 255)}`;
+        }
+
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+
+        const SERVERS = ['Mumbai (IN)', 'Singapore', 'Tokyo', 'London', 'New York', 'Frankfurt', 'Dubai'];
+        const ISPS = ['Airtel', 'Jio', 'BSNL', 'ACT Fibernet', 'Spectra', 'Tata Play', 'Hathway'];
+        const COUNTRIES = ['India', 'Singapore', 'Japan', 'UK', 'USA', 'Germany', 'UAE'];
+        const CONNECTIONS = ['Fiber', '5G', 'Cable', 'DSL', 'Satellite', '4G LTE'];
+
+        // ================================================================
+        // 🎯 UPDATE BEST SPEEDS (REAL TIME)
+        // ================================================================
+        function updateBestSpeeds(download, upload, peak) {
+            if (download > bestDownloadSpeed) {
+                bestDownloadSpeed = download;
+                bestDownload.textContent = bestDownloadSpeed + ' Mbps';
+            }
+            if (upload > bestUploadSpeed) {
+                bestUploadSpeed = upload;
+                bestUpload.textContent = bestUploadSpeed + ' Mbps';
+            }
+            if (peak > bestPeakSpeed) {
+                bestPeakSpeed = peak;
+                bestPeak.textContent = bestPeakSpeed + ' Mbps';
+            }
+        }
+
+        // ================================================================
+        // 🧪 TEST BUTTON
+        // ================================================================
+        testBtn.addEventListener('click', function() {
+            if (isTesting) return;
+
+            isTesting = true;
+            testBtn.disabled = true;
+            testBtn.textContent = '⏳ Testing...';
+            statusLabel.className = 'status testing';
+            statusLabel.textContent = '● testing download...';
+            progressFill.style.width = '0%';
+
+            // ---- Generate all data ----
+            const targetDownload = randomInt(10, 300);
+            const targetUpload = Math.floor(targetDownload * (0.2 + Math.random() * 0.4));
+            const ping = randomInt(5, 45);
+            const currentIP = generateIP();
+            const server = SERVERS[Math.floor(Math.random() * SERVERS.length)];
+            const isp = ISPS[Math.floor(Math.random() * ISPS.length)];
+            const country = COUNTRIES[Math.floor(Math.random() * COUNTRIES.length)];
+            const connection = CONNECTIONS[Math.floor(Math.random() * CONNECTIONS.length)];
+            const testId = 'T' + String(randomInt(100000, 999999));
+
+            // ---- Update static info (real time) ----
+            ipAddress.textContent = currentIP;
+            serverInfo.textContent = server;
+            latencyInfo.textContent = ping + ' ms';
+            ispInfo.textContent = isp;
+            countryInfo.textContent = country;
+            testIdInfo.textContent = testId;
+            connectionInfo.textContent = connection;
+            timeInfo.textContent = getCurrentTime();
+
+            let progress = 0;
+            let peakDuringTest = 0;
+            let dataUsed = 0;
+
+            // ============================================================
+            // 📥 DOWNLOAD TEST
+            // ============================================================
+            const interval = setInterval(() => {
+                progress += Math.random() * 6 + 3;
+                if (progress > 100) progress = 100;
+                progressFill.style.width = progress + '%';
+
+                const currentDownload = Math.floor((progress / 100) * targetDownload);
+                const currentUpload = Math.floor((progress / 100) * targetUpload * 0.3);
+
+                // ---- Update main speed (real time) ----
+                mainSpeed.innerHTML = currentDownload + '<span>Mbps</span>';
+                downloadSpeed.innerHTML = currentDownload + '<span>Mbps</span>';
+
+                // ---- Show upload also during download (real time preview) ----
+                uploadSpeed.innerHTML = currentUpload + '<span>Mbps</span>';
+
+                // ---- Data used (real time) ----
+                dataUsed = Math.floor((progress / 100) * 60) + 5;
+                dataInfo.textContent = dataUsed + ' MB';
+
+                // ---- Track peak ----
+                if (currentDownload > peakDuringTest) {
+                    peakDuringTest = currentDownload;
+                }
+
+                // ---- Update best speeds DURING test (real time) ----
+                updateBestSpeeds(currentDownload, currentUpload, peakDuringTest);
+
+                // ---- Status with percentage ----
+                statusLabel.textContent = `● testing download ${Math.floor(progress)}%`;
+
+                // ============================================================
+                // 📤 WHEN DOWNLOAD COMPLETE → UPLOAD
+                // ============================================================
+                if (progress >= 100) {
+                    clearInterval(interval);
+
+                    // Final download
+                    mainSpeed.innerHTML = targetDownload + '<span>Mbps</span>';
+                    downloadSpeed.innerHTML = targetDownload + '<span>Mbps</span>';
+                    statusLabel.textContent = '● testing upload...';
+
+                    let uploadProgress = 0;
+
+                    const uploadInterval = setInterval(() => {
+                        uploadProgress += Math.random() * 6 + 3;
+                        if (uploadProgress > 100) uploadProgress = 100;
+                        progressFill.style.width = uploadProgress + '%';
+
+                        const currentUploadFinal = Math.floor((uploadProgress / 100) * targetUpload);
+                        uploadSpeed.innerHTML = currentUploadFinal + '<span>Mbps</span>';
+
+                        // ---- Update main speed to show upload progress ----
+                        // (keep showing download speed, but we can show upload in main too)
+                        // Actually let's show upload in main during upload phase
+                        mainSpeed.innerHTML = currentUploadFinal + '<span>Mbps</span>';
+                        // But change color to indicate upload? We'll keep it simple.
+
+                        // ---- Update best speeds during upload ----
+                        updateBestSpeeds(targetDownload, currentUploadFinal, peakDuringTest);
+
+                        statusLabel.textContent = `● testing upload ${Math.floor(uploadProgress)}%`;
+
+                        // ============================================================
+                        // ✅ TEST COMPLETE
+                        // ============================================================
+                        if (uploadProgress >= 100) {
+                            clearInterval(uploadInterval);
+
+                            // Final values
+                            uploadSpeed.innerHTML = targetUpload + '<span>Mbps</span>';
+                            mainSpeed.innerHTML = targetDownload + '<span>Mbps</span>';
+                            progressFill.style.width = '100%';
+                            dataInfo.textContent = randomInt(25, 90) + ' MB';
+                            latencyInfo.textContent = ping + ' ms';
+
+                            // ---- Final best speeds update ----
+                            updateBestSpeeds(targetDownload, targetUpload, peakDuringTest);
+
+                            // ---- Status ----
+                            statusLabel.className = 'status done';
+                            statusLabel.textContent = '● done ✅';
+                            testBtn.textContent = '▶ Test Again';
+                            testBtn.disabled = false;
+                            isTesting = false;
+
+                            // ---- Extra ----
+                            timeInfo.textContent = getCurrentTime();
+                            testCount++;
+                        }
+                    }, 80);
+                }
+            }, 80);
+        });
+
+        // ================================================================
+        // 🔄 TOGGLE EXTRA DETAILS
+        // ================================================================
+        toggleDetails.addEventListener('click', function() {
+            if (extraDetails.style.display === 'none' || extraDetails.style.display === '') {
+                extraDetails.style.display = 'block';
+                this.textContent = '📋 Hide extra info ▲';
+            } else {
+                extraDetails.style.display = 'none';
+                this.textContent = '📋 Show extra info ▾';
+            }
+        });
+
+        // ================================================================
+        // 📌 INITIAL STATE
+        // ================================================================
+        // Set initial IP on load
+        ipAddress.textContent = generateIP();
+        serverInfo.textContent = SERVERS[Math.floor(Math.random() * SERVERS.length)];
+        connectionInfo.textContent = CONNECTIONS[Math.floor(Math.random() * CONNECTIONS.length)];
+        countryInfo.textContent = COUNTRIES[Math.floor(Math.random() * COUNTRIES.length)];
+        ispInfo.textContent = ISPS[Math.floor(Math.random() * ISPS.length)];
+    </script>
+</body>
+</html>
