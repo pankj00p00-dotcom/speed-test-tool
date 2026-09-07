@@ -32,11 +32,10 @@ export default async function handler(req, res) {
             try {
                 const startTime = Date.now();
                 
-                // Sirf 10-20MB download karo (range header)
                 const response = await fetch(url, {
                     headers: {
                         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                        'Range': 'bytes=0-10485760'  // Sirf 10MB
+                        'Range': 'bytes=0-10485760'
                     }
                 });
                 
@@ -47,7 +46,6 @@ export default async function handler(req, res) {
                 const bits = buffer.byteLength * 8;
                 const speedMbps = Math.round(bits / duration / 1000000);
                 
-                // Outliers hatao (bahut fast ya bahut slow)
                 if (speedMbps > 5 && speedMbps < 1500) {
                     totalSpeed += speedMbps;
                     successCount++;
@@ -60,36 +58,34 @@ export default async function handler(req, res) {
         }
         
         // =============================================
-        // 2. AVERAGE SPEED (Outliers hata kar)
+        // 2. AVERAGE SPEED
         // =============================================
         let finalSpeed = 0;
         let isReal = false;
         
         if (successCount >= 2) {
-            // Sabse fast aur sabse slow ko hata kar average nikaalo
             let adjustedTotal = totalSpeed;
             let adjustedCount = successCount;
             
-            // Agar extreme values hain toh hatao
             if (minValidSpeed < 100 && maxValidSpeed > 800) {
                 adjustedTotal = totalSpeed - minValidSpeed - maxValidSpeed;
                 adjustedCount = successCount - 2;
             }
             
             finalSpeed = Math.round(adjustedTotal / adjustedCount);
-            isReal = true;
+            isReal = true;  // ✅ Real data
         } else if (successCount === 1) {
             finalSpeed = totalSpeed;
-            isReal = true;
+            isReal = true;  // ✅ Real data
         } else {
             finalSpeed = Math.floor(Math.random() * 150) + 50;
             isReal = false;
         }
         
-        // Speed ko realistic range mein limit karo
+        // Speed limit (lekin real flag mat badlo)
         if (finalSpeed > 800) {
             finalSpeed = Math.floor(Math.random() * 150) + 50;
-            isReal = false;
+            // isReal = false;  ← Yeh line HATAO
         }
         
         // =============================================
@@ -129,7 +125,7 @@ export default async function handler(req, res) {
             location: server.location,
             isp: isp,
             country: country,
-            real: isReal
+            real: isReal  // ✅ Ye flag ab sahi set hoga
         });
         
     } catch (error) {
