@@ -15,7 +15,7 @@ export default async function handler(req, res) {
         // =============================================
         // 1. REAL SPEED TEST (Cloudflare 10MB file)
         // =============================================
-        const fileUrl = 'https://speed.cloudflare.com/__down?bytes=10485760';
+        const fileUrl = 'https://speed.cloudflare.com/__down?bytes=104857600';
         
         const startTime = Date.now();
         
