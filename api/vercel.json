@@ -1,0 +1,10 @@
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ],
+  "functions": {
+    "api/speed.js": {
+      "runtime": "nodejs18.x"
+    }
+  }
+}
