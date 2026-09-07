@@ -1,15 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- ========================================= -->
+    <!-- 🔍 GOOGLE SEARCH CONSOLE VERIFICATION     -->
+    <!-- ========================================= -->
     <meta name="google-site-verification" content="GRtDQJ2BpUGChbtvJVmupWRxMTszIEmufHkd2qxR2C0" />
+
+    <!-- ========================================= -->
+    <!-- 📱 BASIC META TAGS                       -->
+    <!-- ========================================= -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🚀 Real Speed Test</title>
+    <title>🚀 Real Speed Test - Check Your Internet Speed Free</title>
+    <meta name="description" content="Real time internet speed test tool. Check your download, upload, latency, IP address and ISP for free. No ads, no signup." />
+    <meta name="keywords" content="speed test, internet speed, real speed test, check internet speed, download speed, upload speed, latency test" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://speed-test-tool.vercel.app" />
+
+    <!-- ========================================= -->
+    <!-- 📱 OPEN GRAPH (SOCIAL MEDIA - FACEBOOK, WHATSAPP, LINKEDIN) -->
+    <!-- ========================================= -->
+    <meta property="og:title" content="🚀 Real Speed Test - Check Your Internet Speed Free" />
+    <meta property="og:description" content="Real time internet speed test tool. Check your download, upload, latency and IP address for free. No ads, no signup." />
+    <meta property="og:url" content="https://speed-test-tool.vercel.app" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Real Speed Test" />
+    <!-- <meta property="og:image" content="https://speed-test-tool.vercel.app/og-image.png" /> --> <!-- Optional: Social media thumbnail -->
+
+    <!-- ========================================= -->
+    <!-- 🐦 TWITTER CARD                          -->
+    <!-- ========================================= -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="🚀 Real Speed Test - Check Your Internet Speed Free" />
+    <meta name="twitter:description" content="Real time internet speed test tool. Check your download, upload, latency and IP address for free. No ads, no signup." />
+    <!-- <meta name="twitter:image" content="https://speed-test-tool.vercel.app/og-image.png" /> --> <!-- Optional -->
+
+    <!-- ========================================= -->
+    <!-- 📱 THEME COLOR (Mobile Browser)          -->
+    <!-- ========================================= -->
+    <meta name="theme-color" content="#0b0e14" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- ========================================= -->
+    <!-- 🎨 CSS STYLES                            -->
+    <!-- ========================================= -->
     <style>
+        /* ===== RESET ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* ===== BODY ===== */
         body {
             background: #0b0e14;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -17,6 +60,8 @@
             color: white;
             padding: 20px;
         }
+        
+        /* ===== CARD ===== */
         .card {
             background: #141a24;
             padding: 30px 35px;
@@ -25,7 +70,10 @@
             width: 100%;
             border: 1px solid #2a313e;
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            transition: 0.3s;
         }
+        
+        /* ===== HEADER ===== */
         .header {
             display: flex;
             justify-content: space-between;
@@ -51,6 +99,8 @@
             color: #b3c2d1;
             font-weight: 700;
         }
+        
+        /* ===== SPEED ===== */
         .speed-main {
             font-size: 80px;
             font-weight: 700;
@@ -78,6 +128,7 @@
         .status.done { color: #4a9eff; }
         .status.error { color: #ff6b6b; }
         
+        /* ===== PROGRESS ===== */
         .progress-bar {
             width: 100%;
             height: 5px;
@@ -93,6 +144,8 @@
             border-radius: 10px;
             transition: width 0.15s;
         }
+        
+        /* ===== DOWNLOAD + UPLOAD ===== */
         .speed-row {
             display: flex;
             gap: 12px;
@@ -124,6 +177,7 @@
         .speed-box.download .number { color: #4a9eff; }
         .speed-box.upload .number { color: #ff6b6b; }
         
+        /* ===== BUTTONS ===== */
         .btn-test {
             background: #1f8b4c;
             border: none;
@@ -155,6 +209,7 @@
         }
         .btn-details:hover { background: #1f2937; }
         
+        /* ===== INFO PANEL ===== */
         .info-panel {
             margin-top: 14px;
             padding-top: 14px;
@@ -192,6 +247,7 @@
         .info-item .info-value.gold { color: #ffb347; }
         .info-item .info-value.purple { color: #b388ff; }
         
+        /* ===== BEST SPEEDS ===== */
         .best-section {
             margin-top: 10px;
             padding: 12px 14px;
@@ -231,6 +287,25 @@
         .best-item .best-value.upload-best { color: #ff6b6b; }
         .best-item .best-value.peak-best { color: #ffb347; }
         
+        /* ===== BADGES ===== */
+        .real-badge {
+            background: #1f8b4c44;
+            color: #8bc34a;
+            padding: 2px 12px;
+            border-radius: 60px;
+            font-size: 10px;
+            border: 1px solid #1f8b4c66;
+        }
+        .sim-badge {
+            background: #ff6b6b44;
+            color: #ff6b6b;
+            padding: 2px 12px;
+            border-radius: 60px;
+            font-size: 10px;
+            border: 1px solid #ff6b6b66;
+        }
+        
+        /* ===== DETAILS PANEL ===== */
         .details-panel {
             display: none;
             margin-top: 12px;
@@ -257,22 +332,8 @@
             font-size: 13px;
             font-weight: 500;
         }
-        .real-badge {
-            background: #1f8b4c44;
-            color: #8bc34a;
-            padding: 2px 12px;
-            border-radius: 60px;
-            font-size: 10px;
-            border: 1px solid #1f8b4c66;
-        }
-        .sim-badge {
-            background: #ff6b6b44;
-            color: #ff6b6b;
-            padding: 2px 12px;
-            border-radius: 60px;
-            font-size: 10px;
-            border: 1px solid #ff6b6b66;
-        }
+        
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 550px) {
             .card { padding: 20px; }
             .speed-main { font-size: 58px; }
@@ -285,23 +346,23 @@
 </head>
 <body>
     <div class="card">
-        <!-- Header -->
+        <!-- ===== HEADER ===== -->
         <div class="header">
             <div class="vpn-badge">🔒 VPN</div>
             <div class="fast-logo">⚡ fast.com</div>
         </div>
 
-        <!-- Speed -->
+        <!-- ===== SPEED ===== -->
         <div class="speed-main" id="mainSpeed">0<span>Mbps</span></div>
         <div class="speed-label">Your Internet speed is</div>
         <div class="status ready" id="statusLabel">● ready</div>
 
-        <!-- Progress -->
+        <!-- ===== PROGRESS ===== -->
         <div class="progress-bar">
             <div class="progress-fill" id="progressFill"></div>
         </div>
 
-        <!-- Download + Upload -->
+        <!-- ===== DOWNLOAD + UPLOAD ===== -->
         <div class="speed-row">
             <div class="speed-box download">
                 <div class="number" id="downloadSpeed">0<span>Mbps</span></div>
@@ -313,11 +374,11 @@
             </div>
         </div>
 
-        <!-- Buttons -->
+        <!-- ===== BUTTONS ===== -->
         <button class="btn-test" id="testBtn">▶ Test Now</button>
         <button class="btn-details" id="toggleDetails">📋 Show extra info ▾</button>
 
-        <!-- Info Panel -->
+        <!-- ===== INFO PANEL ===== -->
         <div class="info-panel">
             <div class="info-grid">
                 <div class="info-item">
@@ -338,7 +399,7 @@
                 </div>
             </div>
 
-            <!-- Best Speeds -->
+            <!-- ===== BEST SPEEDS ===== -->
             <div class="best-section">
                 <div class="best-title">🏆 Best Speeds (This Session)</div>
                 <div class="best-row">
@@ -357,13 +418,13 @@
                 </div>
             </div>
             
-            <!-- Data Source Badge -->
+            <!-- ===== DATA SOURCE BADGE ===== -->
             <div style="margin-top: 10px; text-align: center;">
                 <span id="dataSourceBadge" class="real-badge">🟢 Real Data</span>
             </div>
         </div>
 
-        <!-- Extra Details -->
+        <!-- ===== EXTRA DETAILS ===== -->
         <div class="details-panel" id="extraDetails">
             <div class="detail-row">
                 <span class="detail-label">🏢 ISP</span>
@@ -388,6 +449,9 @@
         </div>
     </div>
 
+    <!-- ========================================= -->
+    <!-- 🚀 JAVASCRIPT                            -->
+    <!-- ========================================= -->
     <script>
         // ================================================================
         // 🚀 ALL ELEMENTS
@@ -574,6 +638,14 @@
                 this.textContent = '📋 Show extra info ▾';
             }
         });
+
+        // ================================================================
+        // 📊 PERFORMANCE MARK (Analytics)
+        // ================================================================
+        // Google Analytics ya koi bhi analytics script yahan add kar sakte ho
+        
+        console.log('🚀 Real Speed Test loaded successfully!');
+        console.log('📡 Live URL: https://speed-test-tool.vercel.app');
     </script>
 </body>
 </html>
