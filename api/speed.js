@@ -3,7 +3,7 @@
 // =============================================
 
 export default async function handler(req, res) {
-    // CORS headers (taake frontend se call kar sake)
+    // CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
     
@@ -13,34 +13,34 @@ export default async function handler(req, res) {
 
     try {
         // =============================================
-        // 1. REAL SPEED TEST (File Download Method)
+        // 1. REAL SPEED TEST (File Download)
         // =============================================
         const startTime = Date.now();
         
-        // Google CDN se 10MB file download karo
+        // Google CDN se 10MB file download
         const response = await fetch('https://dl.google.com/dl/android/studio/install/3.6.0.0/android-studio-ide-192.6392135-windows.exe', {
             headers: {
-                'Range': 'bytes=0-10485760'  // Sirf 10MB download
+                'Range': 'bytes=0-10485760'  // Sirf 10MB
             }
         });
         
         const buffer = await response.arrayBuffer();
         const endTime = Date.now();
         
-        // Speed calculate karo (Mbps)
-        const duration = (endTime - startTime) / 1000; // seconds
-        const bits = buffer.byteLength * 8; // bits
+        // Speed calculate (Mbps)
+        const duration = (endTime - startTime) / 1000;
+        const bits = buffer.byteLength * 8;
         const speedMbps = Math.round(bits / duration / 1000000);
         
         // =============================================
         // 2. REAL IP ADDRESS
         // =============================================
         const realIP = req.headers['x-forwarded-for']?.split(',')[0] || 
-                      req.connection?.remoteAddress || 
+                      req.socket?.remoteAddress || 
                       'Unknown';
         
         // =============================================
-        // 3. SERVER LOCATION (Real)
+        // 3. SERVER LOCATION
         // =============================================
         const servers = [
             { name: 'Google CDN (Mumbai)', location: 'Mumbai, India' },
@@ -50,9 +50,8 @@ export default async function handler(req, res) {
         const server = servers[Math.floor(Math.random() * servers.length)];
         
         // =============================================
-        // 4. ISP & COUNTRY (IP se detect karo)
+        // 4. ISP & COUNTRY
         // =============================================
-        // Free IP geolocation API
         let isp = 'Unknown';
         let country = 'India';
         
@@ -62,13 +61,12 @@ export default async function handler(req, res) {
             isp = geoData.org || 'Unknown';
             country = geoData.country_name || 'India';
         } catch (e) {
-            // Fallback data
             const isps = ['Airtel', 'Jio', 'BSNL', 'ACT Fibernet', 'Hathway', 'Spectra'];
             isp = isps[Math.floor(Math.random() * isps.length)];
         }
         
         // =============================================
-        // 5. RESPONSE BHEJO
+        // 5. RESPONSE
         // =============================================
         res.status(200).json({
             success: true,
@@ -85,11 +83,10 @@ export default async function handler(req, res) {
         
     } catch (error) {
         // =============================================
-        // 6. ERROR HANDLING (Simulated fallback)
+        // 6. ERROR - SIMULATED FALLBACK
         // =============================================
         console.error('Speed test error:', error);
         
-        // Simulated data (agar real test fail ho)
         const simSpeed = Math.floor(Math.random() * 290) + 10;
         const isps = ['Airtel', 'Jio', 'BSNL', 'ACT Fibernet'];
         
@@ -99,7 +96,7 @@ export default async function handler(req, res) {
             upload: Math.floor(simSpeed * 0.3),
             ping: Math.floor(Math.random() * 40) + 5,
             ip: '192.168.1.' + Math.floor(Math.random() * 255),
-            server: 'Fallback Server',
+            server: 'Fallback Server (Simulated)',
             location: 'India',
             isp: isps[Math.floor(Math.random() * isps.length)],
             country: 'India',
