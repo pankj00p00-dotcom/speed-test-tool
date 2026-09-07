@@ -13,24 +13,52 @@ export default async function handler(req, res) {
 
     try {
         // =============================================
-        // 1. REAL SPEED TEST (File Download)
+        // 1. REAL SPEED TEST (Multiple File Sources)
         // =============================================
-        const startTime = Date.now();
+        const fileUrls = [
+            'https://cdn.jsdelivr.net/npm/axios@1.6.0/package.json',
+            'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js',
+            'https://unpkg.com/react@18/umd/react.production.min.js'
+        ];
         
-        // Google CDN se 10MB file download
-        const response = await fetch('https://dl.google.com/dl/android/studio/install/3.6.0.0/android-studio-ide-192.6392135-windows.exe', {
-            headers: {
-                'Range': 'bytes=0-10485760'  // Sirf 10MB
+        // Pehla file jo kaam kare use karo
+        let speedMbps = 0;
+        let success = false;
+        
+        for (const url of fileUrls) {
+            try {
+                const startTime = Date.now();
+                
+                // File fetch karo
+                const response = await fetch(url, {
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    }
+                });
+                
+                const buffer = await response.arrayBuffer();
+                const endTime = Date.now();
+                
+                // Speed calculate (Mbps)
+                const duration = (endTime - startTime) / 1000; // seconds
+                const bits = buffer.byteLength * 8; // bits
+                speedMbps = Math.round(bits / duration / 1000000);
+                
+                // Agar speed 0 se zyada hai toh success
+                if (speedMbps > 0) {
+                    success = true;
+                    break;
+                }
+            } catch (e) {
+                // Is file se nahi hua, agla try karo
+                continue;
             }
-        });
+        }
         
-        const buffer = await response.arrayBuffer();
-        const endTime = Date.now();
-        
-        // Speed calculate (Mbps)
-        const duration = (endTime - startTime) / 1000;
-        const bits = buffer.byteLength * 8;
-        const speedMbps = Math.round(bits / duration / 1000000);
+        // Agar koi bhi file kaam nahi kiya toh simulated data
+        if (!success || speedMbps === 0) {
+            speedMbps = Math.floor(Math.random() * 290) + 10;
+        }
         
         // =============================================
         // 2. REAL IP ADDRESS
@@ -43,9 +71,9 @@ export default async function handler(req, res) {
         // 3. SERVER LOCATION
         // =============================================
         const servers = [
-            { name: 'Google CDN (Mumbai)', location: 'Mumbai, India' },
-            { name: 'Google CDN (Delhi)', location: 'Delhi, India' },
-            { name: 'Google CDN (Bangalore)', location: 'Bangalore, India' }
+            { name: 'CDN (Mumbai)', location: 'Mumbai, India' },
+            { name: 'CDN (Delhi)', location: 'Delhi, India' },
+            { name: 'CDN (Bangalore)', location: 'Bangalore, India' }
         ];
         const server = servers[Math.floor(Math.random() * servers.length)];
         
@@ -78,7 +106,7 @@ export default async function handler(req, res) {
             location: server.location,
             isp: isp,
             country: country,
-            real: true
+            real: success
         });
         
     } catch (error) {
